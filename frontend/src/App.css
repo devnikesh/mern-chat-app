@@ -1,0 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400&display=swap");
+
+.App {
+  display: flex;
+  position: sticky;
+  background-position: center;
+  background-size: cover;
+  font-family: "Source Code Pro", monospace;
+}
