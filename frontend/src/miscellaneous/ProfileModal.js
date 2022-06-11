@@ -30,23 +30,13 @@ const ProfileModal = ({ user, children }) => {
         <ModalContent>
           <ModalHeader>{user.name}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody
-            d="flex"
-            alignItems="center"
-            flexDir="column"
-            justifyContent="space-between"
-          >
-            <Image
-              src={user.image}
-              alt={user.name}
-              borderRadius="full"
-              boxSize="150px"
-            />
+          <ModalBody d="flex" alignItems="center" flexDir="column" justifyContent="space-between">
+            <Image src={user.image} alt={user.name} borderRadius="full" boxSize="150px" />
             <Text fontSize="4xl"> {user.email}</Text>
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button mr={3} onClick={onClose}>
               Close
             </Button>
           </ModalFooter>

@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputRightElement,
-  VStack,
-} from "@chakra-ui/react";
+import { Button, FormControl, FormLabel, Input, InputGroup, InputRightElement, VStack } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
@@ -47,7 +39,6 @@ const Login = () => {
         },
         config
       );
-      console.log(data);
 
       toast({
         title: "Login Successful!",
@@ -102,13 +93,7 @@ const Login = () => {
         </InputGroup>
       </FormControl>
 
-      <Button
-        colorScheme="blue"
-        width="100%"
-        style={{ marginTop: 15 }}
-        onClick={submitHandler}
-        isLoading={loading}
-      >
+      <Button colorScheme="blue" width="100%" style={{ marginTop: 15 }} onClick={submitHandler} isLoading={loading}>
         Login
       </Button>
       <Button

@@ -8,12 +8,11 @@ import { debounce } from "lodash";
 const SearchUser = () => {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
-  // const [loadingChat, setLoadingChat] = useState(false);
   const toast = useToast();
-  const { selectedChat, setSelectedChat, user, chats, setChats, result, setResult } = ChatState();
+  const { user, setResult } = ChatState();
 
   const deb = useCallback(
-    debounce((text) => setSearch(text), 500),
+    debounce((text) => handleSearch(text), 500),
     []
   );
   const updateSearch = (text) => {
@@ -25,7 +24,7 @@ const SearchUser = () => {
   }, [search]);
 
   const handleSearch = async (searchVal) => {
-    // setSearch(searchVal);
+    setSearch(searchVal);
     console.log(searchVal);
 
     try {

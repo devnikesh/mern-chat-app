@@ -2,8 +2,20 @@
 
 .App {
   display: flex;
-  position: sticky;
-  background-position: center;
-  background-size: cover;
+  height: 100vh;
+  overflow: hidden;
   font-family: "Source Code Pro", monospace;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(136, 136, 136, 0.281);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

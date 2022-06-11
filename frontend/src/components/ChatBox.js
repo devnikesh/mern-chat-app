@@ -1,18 +1,26 @@
 import React from "react";
 import { Box } from "@chakra-ui/react";
-import treeImg from "../resource/trees.jpg";
-const ChatBox = () => {
+// import treeImg from "../resource/trees.jpg";
+import { ChatState } from "../Context/ChatProvider";
+import SingleChat from "./SingleChat";
+
+const ChatBox = ({ reFetch, setRefetch }) => {
+  const { selectedChat } = ChatState();
+
   return (
     <>
       <Box
-        bgColor={"#F7FAFC"}
-        padding={"0.5rem 1rem 0.5rem 1rem"}
-        d="flex"
-        justifyContent="space-between"
-        align-items="center"
-        w="100%"
+        bgColor={"#FFFFFF"}
+        p={3}
+        d={{ base: selectedChat ? "flex" : "none", md: "flex" }}
+        flexDir="column"
+        alignItems="center"
+        w={{ base: "100%", md: "68%" }}
         border={"1px solid black"}
-      ></Box>
+        // borderRadius="lg"
+      >
+        <SingleChat reFetch={reFetch} setRefetch={setRefetch} />
+      </Box>
     </>
   );
 };

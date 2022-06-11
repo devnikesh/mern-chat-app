@@ -1,23 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { ChatState } from "../Context/ChatProvider";
 import { useHistory } from "react-router-dom";
 
 // Chakra Imports Starts //
-import {
-  Button,
-  Box,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Avatar,
-} from "@chakra-ui/react";
-import { SearchIcon, BellIcon } from "@chakra-ui/icons";
+import { Button, Box, Menu, MenuButton, MenuList, MenuItem, Avatar } from "@chakra-ui/react";
+import { BellIcon } from "@chakra-ui/icons";
 import ProfileModal from "../miscellaneous/ProfileModal";
 // Chakra Imports Ends  //
 
 const NavBar = () => {
- 
   const { user } = ChatState();
   const history = useHistory();
   const logoutUser = () => {
@@ -37,28 +28,13 @@ const NavBar = () => {
       >
         <div>
           <Menu>
-            <MenuButton
-              as={Button}
-              bgColor="transparent"
-              _hover={{ bg: "transparent" }}
-              border="none"
-            >
+            <MenuButton as={Button} bgColor="transparent" _hover={{ bg: "transparent" }} border="none">
               <BellIcon fontSize="2xl" />
             </MenuButton>
           </Menu>
           <Menu>
-            <MenuButton
-              as={Button}
-              bgColor="transparent"
-              _hover={{ bg: "transparent" }}
-              border="none"
-            >
-              <Avatar
-                size="sm"
-                cursor="pointer"
-                name={user.name}
-                src={user.pic}
-              />
+            <MenuButton as={Button} bgColor="transparent" _hover={{ bg: "transparent" }} border="none">
+              <Avatar size="sm" cursor="pointer" name={user.name} src={user.pic} />
             </MenuButton>
             <MenuList>
               <ProfileModal user={user}>
@@ -68,6 +44,12 @@ const NavBar = () => {
               <MenuItem onClick={logoutUser}>Logout</MenuItem>
             </MenuList>
           </Menu>
+
+          {/* <Menu>
+            <MenuButton as={Button} bgColor="transparent" _hover={{ bg: "transparent" }} border="none">
+              <SearchIcon fontSize="2xl" onClick={}/>
+            </MenuButton>
+          </Menu> */}
         </div>
       </Box>
     </>
