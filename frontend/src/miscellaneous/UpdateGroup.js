@@ -169,8 +169,9 @@ const UpdateGroup = ({ fetchMessages, reFetch, setReFetch }) => {
       );
       console.log(`remove data: ${data}`);
       user1._id === user._id ? setSelectedChat() : setSelectedChat(data);
+      setReFetch(!reFetch);
+      fetchMessages();
       setLoading(false);
-      // setReFetch(!reFetch);
     } catch (error) {
       toast({
         title: "Error Occured!",

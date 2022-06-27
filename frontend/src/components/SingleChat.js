@@ -6,17 +6,42 @@ import { getSenderDetails } from "../config/ChatLogics";
 import ProfileModal from "../miscellaneous/ProfileModal";
 import UpdateGroup from "../miscellaneous/UpdateGroup";
 import axios from "axios";
+import Message from "./Message";
+import { io } from "socket.io-client";
+
+const ENDPOINT = "http://localhost:5000/";
+var socket, selectedChatCompare;
 
 const SingleChat = ({ reFetch, setRefetch }) => {
   const { user, selectedChat, setSelectedChat } = ChatState();
   const toast = useToast();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [newMessage, setNewMessage] = useState();
-
+  const [newMessage, setNewMessage] = useState("");
+  const [typing, setTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [socketConnected, setSocketConnected] = useState(false);
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", user);
+    socket.on("connection", () => setSocketConnected(true));
+    socket.on("typing", () => setIsTyping(true));
+    socket.on("stop typing", () => setIsTyping(false));
+  }, []);
   useEffect(() => {
     fetchMessages();
+    selectedChatCompare = selectedChat;
   }, [selectedChat]);
+
+  useEffect(() => {
+    socket.on("message received", (newMessageReceived) => {
+      if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
+        // give notification
+      } else {
+        setMessages([...messages, newMessageReceived]);
+      }
+    });
+  });
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -30,8 +55,8 @@ const SingleChat = ({ reFetch, setRefetch }) => {
       setLoading(true);
       const { data } = await axios.get(`/api/message/${selectedChat._id}`, config);
       setMessages(data);
-      console.log(messages + " " + "Mesage");
       setLoading(false);
+      socket.emit("join chat", selectedChat._id);
     } catch (error) {
       toast({
         title: "Error Occured",
@@ -65,6 +90,7 @@ const SingleChat = ({ reFetch, setRefetch }) => {
         setMessages([...messages, data]);
 
         console.log(data);
+        socket.emit("new message", data);
       } catch (error) {
         toast({
           title: "Error Occured",
@@ -77,14 +103,31 @@ const SingleChat = ({ reFetch, setRefetch }) => {
       }
     }
   };
+
   const inputHandler = (e) => {
     setNewMessage(e.target.value);
+
+    if (!socketConnected) return;
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", setSelectedChat._id);
+    }
+    let idleTypingTime = new Date().getTime();
+    var timerLength = 3000;
+    setTimeout(() => {
+      var time = new Date().getTime();
+      var timeDiff = time - idleTypingTime;
+      if (timeDiff >= timerLength && typing) {
+        socket.emit("stop typing", selectedChat._id);
+        setTyping(false);
+      }
+    }, timerLength);
   };
   return (
     <>
       {selectedChat ? (
         <>
-          <Text
+          <Box
             fontSize={{ base: "28px", md: "30px" }}
             pb={3}
             px={2}
@@ -109,10 +152,10 @@ const SingleChat = ({ reFetch, setRefetch }) => {
             ) : (
               <>
                 <Text>{selectedChat.chatName}</Text>
-                <UpdateGroup reFetch={reFetch} setRefetch={setRefetch} />
+                <UpdateGroup reFetch={reFetch} setRefetch={setRefetch} fetchMessages={fetchMessages} />
               </>
             )}
-          </Text>
+          </Box>
           <Box
             d="flex"
             flexDir="column"
@@ -123,7 +166,13 @@ const SingleChat = ({ reFetch, setRefetch }) => {
             h="100%"
             overflowY="hidden"
           >
-            {loading ? <Spinner size="xl" w="20" h="20" alignSelf="center" margin="auto" /> : <></>}
+            {loading ? (
+              <Spinner size="xl" w="20" h="20" alignSelf="center" margin="auto" />
+            ) : (
+              <Box overflowY="scroll">
+                <Message messages={messages} />
+              </Box>
+            )}
             <FormControl onKeyDown={sendMessage} isRequired mt="3">
               <Input
                 placeholder="Enter a message"

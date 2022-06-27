@@ -98,7 +98,6 @@ const MyChats = ({ reFetch }) => {
               mb={2}
               marginTop="1rem"
             >
-              {console.log(chat)}
               <Text>{!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName}</Text>
             </Box>
           ))}
